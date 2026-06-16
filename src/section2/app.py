@@ -465,6 +465,8 @@ else:
     # Render chat history
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
+            if message["role"] == "assistant" and message.get("fallback"):
+                st.warning("⚠️ LLM Generation failed (e.g. rate limit or API issue). Showing local fallback sentence extraction.")
             st.markdown(message["content"])
             if message["role"] == "assistant" and message.get("sources"):
                 conf = message.get("confidence", 0)
@@ -499,6 +501,10 @@ else:
             answer = result["answer"]
             confidence = result["confidence"]
             sources = result["sources"]
+            is_fallback = result.get("fallback", False)
+
+            if is_fallback:
+                st.warning("⚠️ LLM Generation failed (e.g. rate limit or API issue). Showing local fallback sentence extraction.")
 
             st.markdown(answer)
 
@@ -526,4 +532,5 @@ else:
             "content": answer,
             "sources": sources,
             "confidence": confidence,
+            "fallback": is_fallback
         })

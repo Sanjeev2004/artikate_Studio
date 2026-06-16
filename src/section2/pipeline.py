@@ -77,10 +77,16 @@ class RAGPipeline:
                     unique_sentences.append(sent)
                 if len(unique_sentences) >= 3:
                     break
-            return "Based on the retrieved documents: " + " ".join(unique_sentences)
+            
+            # Format as clean bullet points
+            formatted_ans = "Based on the retrieved documents, here are the key references found:\n\n"
+            for sentence in unique_sentences:
+                formatted_ans += f"- {sentence}\n"
+            return formatted_ans
         
         # Default fallback if keywords don't match
-        return f"Based on the retrieved context: {retrieved_chunks[0]['chunk'][:150]}..."
+        top_chunk = retrieved_chunks[0]['chunk'][:300].replace('\n', ' ').strip()
+        return f"Based on the retrieved context:\n\n- {top_chunk}..."
 
     def _generate_answer_llm(self, question: str, context: str) -> Optional[str]:
         """Calls external APIs (Groq, OpenAI, or Gemini) if keys are provided."""
@@ -180,11 +186,13 @@ class RAGPipeline:
         
         # Generation
         llm_answer = self._generate_answer_llm(question, context_text)
+        is_fallback = False
         if llm_answer:
             answer = llm_answer
         else:
             # Fallback to local rule-based sentence generator
             answer = self._generate_answer_local(question, [c[0] for c in retrieved])
+            is_fallback = True
             
         # Perform grounding check on the generated answer
         # Refuse to answer if LLM explicitly says it cannot find the answer
@@ -196,7 +204,8 @@ class RAGPipeline:
             return {
                 "answer": "I am sorry, but the retrieved context does not contain enough information to answer this question.",
                 "sources": [],
-                "confidence": float(round(top_score * 0.5, 2))
+                "confidence": float(round(top_score * 0.5, 2)),
+                "fallback": False
             }
             
         # Construct sources list
@@ -215,7 +224,8 @@ class RAGPipeline:
         return {
             "answer": answer,
             "sources": sources,
-            "confidence": float(round(confidence, 2))
+            "confidence": float(round(confidence, 2)),
+            "fallback": is_fallback
         }
 
     def clear(self):
