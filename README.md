@@ -1,4 +1,4 @@
-# 🚀 Artikate Studio — AI / ML / LLM Engineer Assessment
+# Artikate Studio — AI / ML / LLM Engineer Assessment
 
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
 ![FAISS](https://img.shields.io/badge/VectorStore-FAISS-green)
@@ -11,24 +11,24 @@ The architecture is built with a focus on **low latency, offline capability, and
 
 ---
 
-## 🎥 Optional Section 5: Live System Walkthrough
+## Optional Section 5: Live System Walkthrough
 *(Add your Loom or screen recording link here!)*  
 **[Watch the System Walkthrough Video] (link here)**
 
 ---
 
-## 📑 Assessment Completion Checklist
+## Assessment Completion Checklist
 
 | Section | Description | Status | Reference File |
 |---|---|---|---|
-| **Section 1** | Diagnose a Failing LLM Pipeline | ✅ Completed | [`ANSWERS.md`](ANSWERS.md) |
-| **Section 2** | Build a Production-Grade RAG Pipeline | ✅ Completed | `src/section2/`, [`DESIGN.md`](DESIGN.md) |
-| **Section 3** | Ticket Classifier (<500ms on CPU) | ✅ Completed | `src/section3/`, `tests/` |
-| **Section 4** | Written Systems Design Review | ✅ Completed | [`ANSWERS.md`](ANSWERS.md) |
+| **Section 1** | Diagnose a Failing LLM Pipeline | Completed | [`ANSWERS.md`](ANSWERS.md) |
+| **Section 2** | Build a Production-Grade RAG Pipeline | Completed | `src/section2/`, [`DESIGN.md`](DESIGN.md) |
+| **Section 3** | Ticket Classifier (<500ms on CPU) | Completed | `src/section3/`, `tests/` |
+| **Section 4** | Written Systems Design Review | Completed | [`ANSWERS.md`](ANSWERS.md) |
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```text
 .
@@ -46,7 +46,7 @@ The architecture is built with a focus on **low latency, offline capability, and
 
 ---
 
-## ⚙️ Setup & Installation
+## Setup & Installation
 
 This project is built to run flawlessly in a clean Python 3.11+ environment. 
 
@@ -82,7 +82,7 @@ $env:GEMINI_API_KEY="your-key-here"  # Uses gemini-2.5-flash
 
 ---
 
-## 🚀 Running the Code
+## Running the Code
 
 ### Section 2: Production RAG Pipeline
 This script automatically generates 3 sample legal PDFs, chunks them, builds the FAISS index, and runs an evaluation harness on 10 hand-crafted questions.
