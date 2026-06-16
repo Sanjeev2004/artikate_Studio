@@ -1,13 +1,18 @@
 import os
+import sys
 import json
 import random
 import pickle
+import logging
+
+# Allow running directly (python src/section3/train.py) as well as via `python -m`.
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 import numpy as np
 from typing import List, Dict, Any
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 from src.section2.embeddings import EmbeddingEngine
-import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)

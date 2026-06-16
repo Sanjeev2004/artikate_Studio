@@ -1,9 +1,14 @@
 import os
+import sys
 import json
+import logging
+
+# Allow running directly (python src/section3/evaluate_classifier.py) as well as via `python -m`.
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 import numpy as np
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from src.section3.classifier import TicketClassifier
-import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)

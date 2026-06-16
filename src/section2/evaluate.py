@@ -1,10 +1,16 @@
 import os
 import sys
+import logging
+
+# Let this script run either way: `python src/section2/evaluate.py` or `python -m src.section2.evaluate`.
+# When run directly, only the script's folder is on sys.path, so the `src` package isn't importable
+# until we add the project root.
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from src.section2.pipeline import RAGPipeline
-import logging
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")

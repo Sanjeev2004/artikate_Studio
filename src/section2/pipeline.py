@@ -16,7 +16,7 @@ class RAGPipeline:
         embedding_model: str = "all-MiniLM-L6-v2", 
         chunk_size: int = 500, 
         chunk_overlap: int = 100,
-        similarity_threshold: float = 0.30
+        similarity_threshold: float = 0.25
     ):
         """Initializes RAG Pipeline components."""
         self.chunk_size = chunk_size
