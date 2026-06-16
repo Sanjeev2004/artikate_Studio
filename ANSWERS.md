@@ -251,30 +251,3 @@ For a non-technical stakeholder: a small dashboard with three plain numbers — 
 the facts match the source, a readability/clarity score, and how much it shortened the
 report — backed by occasional blind A/B preference tests between the old and new version.
 "It's good" becomes "97% of facts match the source, and editors preferred it 7/10 times."
-
-### Question C — On-prem, offline, 2x A100 80GB, <3s for 500-token input
-
-VRAM rule of thumb: weights ≈ params × bytes-per-param. FP16 is 2 bytes, INT4 is ~0.5.
-So a 70B model is ~140GB in FP16 (won't fit two 80GB cards once you add the KV cache), but
-~35GB in 4-bit, which fits one card with room for context. 13B class is ~26GB FP16 /
-~7GB INT4, trivially served.
-
-Models I'd shortlist: Llama-3.3-70B-Instruct (or 3.1-70B) as the quality target, and a
-Mistral/Mixtral or Llama-3.1-8B as the fast fallback if 70B can't hold latency.
-
-Quantisation: 4-bit weight quant — GPTQ or AWQ — for the 70B. AWQ tends to hold accuracy
-slightly better at 4-bit in my experience. That drops 70B to ~35GB and frees memory for
-KV cache and longer context.
-
-Serving: vLLM. Paged attention and continuous batching are what get throughput up under
-concurrent load, it supports tensor parallelism across the two A100s out of the box, and
-it serves an OpenAI-compatible endpoint so the app barely changes. llama.cpp is more for
-CPU/edge; TensorRT-LLM squeezes out more speed but costs a lot more engineering time to
-build and maintain.
-
-Throughput / latency: a 4-bit 70B on a single A100 generates roughly 30–50 tokens/sec for
-a single stream; tensor-parallel across both cards pushes that higher. The 500-token input
-is prefill (fast, parallel); the 3s budget is really about output length. At ~40 tok/s a
-3-second reply is ~120 output tokens, which is fine for most answers — for longer outputs
-I'd stream tokens so time-to-first-token stays low and the user sees progress well inside
-3 seconds, and lean on vLLM batching to keep aggregate throughput up as concurrency rises.
