@@ -12,8 +12,9 @@ The architecture is built with a focus on **low latency, offline capability, and
 ---
 
 ## Optional Section 5: Live System Walkthrough
-*(Add your Loom or screen recording link here!)*  
-**[Watch the System Walkthrough Video] (link here)**
+
+Watch the complete live system demonstration here:  
+**[Watch the System Walkthrough Video](https://www.tella.tv/video/rag-app-ticket-classifier-demo-bau2)**
 
 ---
 
