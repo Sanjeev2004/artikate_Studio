@@ -95,7 +95,12 @@ class RAGPipeline:
             "You are a precise legal document QA assistant. "
             "Answer the user's question using ONLY the provided context. "
             "Cite the source document and page number in your answer. "
-            "If the answer is not in the context, say: 'I cannot find the answer in the provided context.'"
+            "If the answer is not in the context, say: 'I cannot find the answer in the provided context.'\n\n"
+            "Formatting Guidelines:\n"
+            "- Format your response using clean, readable Markdown.\n"
+            "- Use bullet points or numbered lists for lists, rules, or comparisons.\n"
+            "- Use bold text (**like this**) for key terms, dates, monetary values, and important legal names.\n"
+            "- Separate paragraphs with double line breaks to keep the text highly scannable and easy to read."
         )
         user_prompt = f"Context:\n{context}\n\nQuestion: {question}\nAnswer:"
 
