@@ -6,7 +6,7 @@ import logging
 from dotenv import load_dotenv
 
 # Load API keys from .env file if present
-load_dotenv()
+load_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../.env')))
 from src.section2.document_ingestion import load_pdf
 from src.section2.chunking import split_into_legal_chunks
 from src.section2.embeddings import EmbeddingEngine

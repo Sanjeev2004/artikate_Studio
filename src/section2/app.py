@@ -5,7 +5,7 @@ import time
 from dotenv import load_dotenv
 
 # Load .env from project root
-load_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+load_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../.env')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 from src.section2.pipeline import RAGPipeline
