@@ -1,8 +1,8 @@
 import os
 import sys
 
-# Ensure the src directory is available in the path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Ensure the root project directory is available in the path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 from src.section2.pipeline import RAGPipeline
 
