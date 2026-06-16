@@ -336,7 +336,7 @@ html, body, [class*="css"] {
 """, unsafe_allow_html=True)
 
 # ── Session State ──────────────────────────────────────────────────────────────
-if "pipeline" not in st.session_state:
+if "pipeline" not in st.session_state or not hasattr(st.session_state.pipeline, "clear"):
     st.session_state.pipeline = RAGPipeline()
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -383,7 +383,25 @@ with st.sidebar:
         if uploaded_files:
             with st.spinner("Indexing documents..."):
                 upload_dir = "data/uploads"
-                os.makedirs(upload_dir, exist_ok=True)
+                # Clear previous uploaded PDF files from the local directory to avoid mixing old documents
+                if os.path.exists(upload_dir):
+                    for file in os.listdir(upload_dir):
+                        if file.endswith(".pdf"):
+                            file_path = os.path.join(upload_dir, file)
+                            try:
+                                os.unlink(file_path)
+                            except Exception as e:
+                                pass
+                else:
+                    os.makedirs(upload_dir, exist_ok=True)
+                
+                # Reset the vector store index/metadata and clear chat history
+                if hasattr(st.session_state.pipeline, "clear"):
+                    st.session_state.pipeline.clear()
+                else:
+                    st.session_state.pipeline = RAGPipeline()
+                st.session_state.messages = []
+                
                 names = []
                 for f in uploaded_files:
                     path = os.path.join(upload_dir, f.name)

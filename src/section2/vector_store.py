@@ -80,3 +80,10 @@ class VectorStore:
         with open(f"{path_prefix}.meta", "rb") as f:
             self.metadata = pickle.load(f)
         logger.info(f"Vector store loaded. Total vectors: {self.index.ntotal}")
+
+    def clear(self):
+        """Clears the FAISS index and metadata."""
+        self.index = faiss.IndexFlatIP(self.dimension)
+        self.metadata = []
+        logger.info("Vector store index and metadata cleared.")
+

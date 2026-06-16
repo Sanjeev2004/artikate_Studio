@@ -1,11 +1,17 @@
 import os
+import sys
 import pickle
 import numpy as np
 from typing import List
+
+# Ensure project root is in path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from src.section2.embeddings import EmbeddingEngine
+from src.section3.config import MODEL_PATH
 
 class TicketClassifier:
-    def __init__(self, model_path: str = "models/ticket_classifier.pkl"):
+    def __init__(self, model_path: str = MODEL_PATH):
         """Loads the embedding engine and the pre-trained classification head."""
         self.embedding_engine = EmbeddingEngine()
         

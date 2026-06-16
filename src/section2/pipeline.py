@@ -217,3 +217,8 @@ class RAGPipeline:
             "sources": sources,
             "confidence": float(round(confidence, 2))
         }
+
+    def clear(self):
+        """Clears the underlying vector store."""
+        self.vector_store.clear()
+
