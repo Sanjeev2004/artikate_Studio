@@ -1,6 +1,10 @@
 import streamlit as st
 import os
 import sys
+from dotenv import load_dotenv
+
+# Load .env file from the project root
+load_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 # Ensure the root directory is available in the path so imports work
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
@@ -17,32 +21,26 @@ if "messages" not in st.session_state:
 if "documents_ingested" not in st.session_state:
     st.session_state.documents_ingested = False
 
-# Sidebar for Document Upload
+# Sidebar
 with st.sidebar:
-    st.title("Setup")
-    
-    # API Key Configuration
-    st.subheader("LLM API Key (Optional)")
-    st.caption("Enter a key for real LLM answers. Without a key, a local fallback is used.")
-    
-    api_choice = st.selectbox("API Provider", ["Groq (Free)", "OpenAI", "Google Gemini"])
-    api_key_input = st.text_input("API Key", type="password", placeholder="Paste your API key here...")
-    
-    if st.button("Apply Key"):
-        if api_key_input:
-            if api_choice == "Groq (Free)":
-                os.environ["GROQ_API_KEY"] = api_key_input
-            elif api_choice == "OpenAI":
-                os.environ["OPENAI_API_KEY"] = api_key_input
-            elif api_choice == "Google Gemini":
-                os.environ["GEMINI_API_KEY"] = api_key_input
-            st.success(f"{api_choice} key applied!")
-        else:
-            st.warning("Please enter an API key first.")
+    st.title("Legal RAG Chat")
+
+    # Show which LLM is active based on .env
+    st.subheader("LLM Status")
+    if os.environ.get("GROQ_API_KEY"):
+        st.success("Groq (Llama 3.3 70B) — Active")
+    elif os.environ.get("OPENAI_API_KEY"):
+        st.success("OpenAI (gpt-4o-mini) — Active")
+    elif os.environ.get("GEMINI_API_KEY"):
+        st.success("Google Gemini 2.5 Flash — Active")
+    else:
+        st.warning("No API key found. Using local fallback.\nAdd your key to the `.env` file.")
+        st.code("GROQ_API_KEY=your_key_here", language="bash")
 
     st.divider()
     st.subheader("Upload Documents")
     st.write("Upload your legal PDFs to chat with them.")
+
     
     uploaded_files = st.file_uploader("Upload PDFs", type="pdf", accept_multiple_files=True)
     

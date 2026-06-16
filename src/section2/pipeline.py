@@ -3,6 +3,10 @@ import re
 from typing import List, Dict, Any, Optional
 import numpy as np
 import logging
+from dotenv import load_dotenv
+
+# Load API keys from .env file if present
+load_dotenv()
 from src.section2.document_ingestion import load_pdf
 from src.section2.chunking import split_into_legal_chunks
 from src.section2.embeddings import EmbeddingEngine
