@@ -1,0 +1,33 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Model artifacts
+models/*.pkl
+
+# FAISS index
+*.index
+*.meta
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# Byte-compiled
+*.py[cod]
+
+# Pytest cache
+.pytest_cache/
