@@ -79,21 +79,47 @@ class RAGPipeline:
         return f"Based on the retrieved context: {retrieved_chunks[0]['chunk'][:150]}..."
 
     def _generate_answer_llm(self, question: str, context: str) -> Optional[str]:
-        """Calls external APIs (OpenAI or Gemini) if keys are provided."""
+        """Calls external APIs (Groq, OpenAI, or Gemini) if keys are provided."""
+        
+        system_prompt = (
+            "You are a precise legal document QA assistant. "
+            "Answer the user's question using ONLY the provided context. "
+            "Cite the source document and page number in your answer. "
+            "If the answer is not in the context, say: 'I cannot find the answer in the provided context.'"
+        )
+        user_prompt = f"Context:\n{context}\n\nQuestion: {question}\nAnswer:"
+
+        # Check Groq (Free, fast, Llama 3.3 70B)
+        if os.environ.get("GROQ_API_KEY"):
+            try:
+                from openai import OpenAI
+                client = OpenAI(
+                    api_key=os.environ["GROQ_API_KEY"],
+                    base_url="https://api.groq.com/openai/v1"
+                )
+                response = client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    temperature=0.0
+                )
+                return response.choices[0].message.content.strip()
+            except Exception as e:
+                logger.error(f"Groq Generation error: {e}")
+
         # Check OpenAI
         if os.environ.get("OPENAI_API_KEY"):
             try:
                 from openai import OpenAI
                 client = OpenAI()
-                prompt = (
-                    "You are a legal document QA system. Use ONLY the provided context to answer the question.\n"
-                    "If the answer is not in the context, say 'I cannot find the answer in the provided context.'\n\n"
-                    f"Context:\n{context}\n\n"
-                    f"Question: {question}\nAnswer:"
-                )
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
-                    messages=[{"role": "user", "content": prompt}],
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
                     temperature=0.0
                 )
                 return response.choices[0].message.content.strip()
@@ -105,12 +131,7 @@ class RAGPipeline:
             try:
                 from google import genai
                 client = genai.Client()
-                prompt = (
-                    "You are a legal document QA system. Use ONLY the provided context to answer the question.\n"
-                    "If the answer is not in the context, say 'I cannot find the answer in the provided context.'\n\n"
-                    f"Context:\n{context}\n\n"
-                    f"Question: {question}\nAnswer:"
-                )
+                prompt = f"{system_prompt}\n\n{user_prompt}"
                 response = client.models.generate_content(
                     model='gemini-2.5-flash',
                     contents=prompt
@@ -120,6 +141,7 @@ class RAGPipeline:
                 logger.error(f"Gemini Generation error: {e}")
                 
         return None
+
 
     def query(self, question: str) -> Dict[str, Any]:
         """Queries the RAG pipeline.

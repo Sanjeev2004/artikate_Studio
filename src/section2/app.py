@@ -19,7 +19,29 @@ if "documents_ingested" not in st.session_state:
 
 # Sidebar for Document Upload
 with st.sidebar:
-    st.title("📂 Upload Documents")
+    st.title("Setup")
+    
+    # API Key Configuration
+    st.subheader("LLM API Key (Optional)")
+    st.caption("Enter a key for real LLM answers. Without a key, a local fallback is used.")
+    
+    api_choice = st.selectbox("API Provider", ["Groq (Free)", "OpenAI", "Google Gemini"])
+    api_key_input = st.text_input("API Key", type="password", placeholder="Paste your API key here...")
+    
+    if st.button("Apply Key"):
+        if api_key_input:
+            if api_choice == "Groq (Free)":
+                os.environ["GROQ_API_KEY"] = api_key_input
+            elif api_choice == "OpenAI":
+                os.environ["OPENAI_API_KEY"] = api_key_input
+            elif api_choice == "Google Gemini":
+                os.environ["GEMINI_API_KEY"] = api_key_input
+            st.success(f"{api_choice} key applied!")
+        else:
+            st.warning("Please enter an API key first.")
+
+    st.divider()
+    st.subheader("Upload Documents")
     st.write("Upload your legal PDFs to chat with them.")
     
     uploaded_files = st.file_uploader("Upload PDFs", type="pdf", accept_multiple_files=True)
